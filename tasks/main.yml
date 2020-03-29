@@ -1,0 +1,53 @@
+---
+
+- name: install all required packages 
+  yum: 
+    name: "{{ packages }}"
+  vars: 
+    packages: 
+      - python3-pip
+      - unzip
+      - iptraf-ng
+      - alsa-lib.i686
+      - dbus-glib.i686
+      - glibc.i686
+      - gtk2-engines.i686
+      - gtk2.i686
+      - libcanberra-gtk2.i686
+      - libcurl.i686
+      - libXt.i686
+      - nss.i686
+      - PackageKit-gtk3-module.i686
+      - python3-pygithub
+      
+- name: Check if code is installed
+  stat:
+    path: /usr/bin/code
+  register: code
+
+- name: upload visual_studio code rpm
+  copy: 
+    src: "{{ role_path }}/files/rpms/code-1.42.1-1581433057.el7.x86_64.rpm"
+    dest: /tmp
+  when: code.stat.exists == False
+
+- name: install visulal studio code
+  yum:
+    name: /tmp/code-1.42.1-1581433057.el7.x86_64.rpm
+    state: present
+  when: code.stat.exists == False
+
+- name: install rpms
+  yum: 
+    name: 
+      - nmap
+
+- name: Calibre-Web | Create Unit file
+  template: 
+    src: scripts/makerepo.sh.j2 
+    dest: /usr/local/bin/makerepo
+    mode: 0755
+    owner: root
+    group: root
+
+      

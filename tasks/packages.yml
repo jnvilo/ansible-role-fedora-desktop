@@ -20,6 +20,8 @@
       - terminator
       - snapd      
       - python3-virtualenv
+      - git
+      - git-lfs
 
 - name: enable snapd
   service:

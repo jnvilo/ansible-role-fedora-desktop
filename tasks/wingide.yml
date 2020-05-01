@@ -1,0 +1,15 @@
+---
+- name: download wingpro
+  get_url:
+    url: "https://wingware.com/pub/wingpro/7.2.2.0/wingpro7-7.2.2-0.x86_64.rpm"
+    dest: /var/tmp
+    mode: "0666"
+    owner: root
+    group: root
+
+- name: install wingpro rpm 
+  yum: 
+    name: "/var/tmp/wingpro7-7.2.2-0.x86_64.rpm"
+    state: present
+   
+

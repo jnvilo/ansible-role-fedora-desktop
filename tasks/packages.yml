@@ -1,0 +1,32 @@
+---
+
+- name: Install rpmfusion free 
+  yum: 
+    name: "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ansible_distribution_version}}.noarch.rpm"
+    state: present
+
+- name: Install rpmfusion non free
+  yum: 
+    name: https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ansible_distribution_version}}.noarch.rpm
+    state: present
+
+- name: install all required packages
+  yum:
+    name: "{{ packages }}"
+    state: latest
+  vars:
+    packages:
+      - python3-pygithub
+      - terminator
+      - snapd      
+      - python3-virtualenv
+
+- name: enable snapd
+  service:
+    name: snapd
+    state: started
+
+- name: install spotify from local files
+  yum:
+    name: "{{ role_path}}/files/rpms/spotify-client-1.1.26.501-1.fc32.x86_64.rpm"
+    state: present

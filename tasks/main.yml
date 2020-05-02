@@ -29,3 +29,8 @@
 - name: Install snaps
   include: snaps.yml
 
+- name: Install google repo and chrome browser
+  include: google.yml 
+
+- name: Install KVM
+  include: kvm.yml

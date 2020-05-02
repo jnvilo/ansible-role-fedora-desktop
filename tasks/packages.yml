@@ -16,12 +16,24 @@
     state: latest
   vars:
     packages:
+      - gnome-flashback
+      - gnome-applets
+      - gnome-shell
       - python3-pygithub
       - terminator
       - snapd      
       - python3-virtualenv
       - git
       - git-lfs
+      - vim-enhanced
+      - openvpn
+      - NetworkManager-openvpn
+      - NetworkManager-openvpn-gnome
+      - openconnect
+      - vpnc
+      - NetworkManager-vpnc
+      - NetworkManager-vpnc-gnome
+      - NetworkManager-fortisslvpn-gnome
 
 - name: enable snapd
   service:

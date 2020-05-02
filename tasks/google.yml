@@ -1,0 +1,9 @@
+---
+- name: Install google.com Repo
+  copy:
+    src: "etc/yum.repos.d/google.repo"
+    dest: "/etc/yum.repos.d/google.repo"
+
+- name: install vscode rpm 
+  yum:
+    name: google-chrome-stable

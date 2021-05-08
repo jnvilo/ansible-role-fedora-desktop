@@ -1,6 +1,0 @@
-
-- name: start libvirtd
-  service: 
-    name: libvirtd
-    state: started
-    enabled: yes

@@ -1,4 +1,0 @@
----
-
-- name: handle KVM services
-  import_tasks: kvm.yml

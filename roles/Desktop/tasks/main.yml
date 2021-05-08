@@ -1,0 +1,155 @@
+---
+# tasks file for Desktop
+
+
+- name: Install RPM Fusion Free
+  ansible.builtin.dnf:
+    name: "https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-34.noarch.rpm"
+    disable_gpg_check: yes
+    state: present
+
+- name: Install RPM Fusion Non Free
+  ansible.builtin.dnf:
+     name: "https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-34.noarch.rpm"
+     state: present
+     disable_gpg_check: yes
+
+- name: Install Chrome Repo
+  copy:
+    src: google-chrome.repo
+    dest: /etc/yum.repos.d/google-chrome.repo
+    owner: root
+    group: root
+    mode: 0644
+    
+
+- name: Install default packages
+  ansible.builtin.yum:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ default_packages }}"
+  tags:
+    - default_packages
+
+- name: Install python packages
+  ansible.builtin.yum:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ python_packages }}"
+  tags:
+    - python_packages
+
+
+
+- name: Install libvirt packages
+  ansible.builtin.yum:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ libvirt_packages }}"
+  tags:
+    - libvirt
+
+- name: Enable service libvirt
+  ansible.builtin.service:
+    name: libvirtd
+    state: started
+    enabled: yes
+  tags:
+    - libvirt
+
+- name: Ensure we have a libvirt group
+  ansible.builtin.group: 
+    name: libvirt
+    state: present
+  tags:
+    - libvirt
+    - libvirt-user
+
+- name: ADd user jnvilo to libvirt
+  ansible.builtin.user: 
+    name: jasonvi
+    comment: "Main user"
+    groups: libvirt, wheel
+  tags:
+    - libvirt-user
+
+
+
+- name: Install Ultimaker 
+  get_url:
+    url: "https://storage.googleapis.com/software.ultimaker.com/cura/Ultimaker_Cura-4.9.0.AppImage"
+    dest: "/usr/local/bin/"
+    mode: "0755"
+  tags:
+    - ultimaker
+
+
+- name: Add microsoft teams repo
+  yum_repository:
+    name: Teams
+    description: MicroSoft YUM repo
+    file: microsoft
+    baseurl: https://packages.microsoft.com/yumrepos/ms-teams/
+    gpgcheck: no
+
+  tags:
+    - microsoft
+
+- name: Add microsoft vscode repo
+  yum_repository:
+    name: VSCode
+    description: Vscode YUM repo
+    file: microsoft
+    baseurl: https://packages.microsoft.com/yumrepos/vscode/
+    enabled: no
+
+  tags:
+    - microsoft
+
+
+- name: install dependencies (dnf)
+  become: yes
+  dnf:
+    name:
+      - libX11-xcb
+      - which
+    state: present
+  tags:
+    - microsoft
+
+
+- name: install VS Code (dnf)
+  become: yes
+  dnf:
+    name: "{{ visual_studio_code_package }}{{ (visual_studio_code_version | length > 0) | ternary('-' + visual_studio_code_version, '') }}"
+    state: latest
+  tags:
+    - microsoft
+
+
+- name: install Teams
+  become: yes
+  dnf: 
+    name: teams
+    state: latest
+
+
+###
+# Slack
+
+
+- name: Install slack
+  dnf: 
+    name: https://downloads.slack-edge.com/linux_releases/slack-4.15.0-0.1.fc21.x86_64.rpm
+    state: present
+    disable_gpg_check: yes
+  tags:
+    - slack
+
+
+
+- name: Do Vim install
+  include: vim.yml
+  tags:
+    - vim
+

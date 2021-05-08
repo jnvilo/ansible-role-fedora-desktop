@@ -1,0 +1,10 @@
+- hosts: default
+  become: true
+  remote_user: jasonvi
+  gather_facts: yes
+  roles:
+    - role: Desktop
+
+
+
+

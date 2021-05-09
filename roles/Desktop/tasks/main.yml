@@ -153,3 +153,43 @@
   tags:
     - vim
 
+
+- name: install wingide
+  dnf: 
+    name: https://wingware.com/pub/wingpro/7.2.9.0/wingpro7-7.2.9-0.x86_64.rpm
+    state: present
+    disable_gpg_check: yes
+  tags:
+    - wingide
+
+- name: Download wingide license generator
+  get_url:
+    url: "https://raw.githubusercontent.com/RafaelPuerta/Wing-IDE-7-keygen/master/keygen.py"
+    dest: "/usr/local/bin/wingide-keygen.py"
+    mode: "0755"
+    
+  tags:
+    - wingide
+
+
+- name: Create mountpoint
+  file: 
+    path: "{{ item.path }}"
+    state: directory
+    mode: "0744"
+    owner: jasonvi
+    group: jasonvi
+  tags:
+    - mount
+  loop: "{{ mounts }}"
+
+- name: Do mounts
+  mount:
+    path: "{{ item.path }}"
+    src:  "{{ item.src }}"
+    fstype: "{{ item.fstype }}"
+    opts: "{{ item.opts }}"
+    state: present
+  loop: "{{ mounts }}"
+  tags:
+    - mount

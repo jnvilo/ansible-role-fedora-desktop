@@ -69,3 +69,9 @@ users: []
 
 
 
+mounts:
+  - src: /dev/data/code
+    path: /home/jasonvi/code 
+    fstype: xfs
+    opts: defaults
+    state: present
